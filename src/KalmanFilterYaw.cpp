@@ -1,4 +1,4 @@
-// // Combine a gyroscope and accelerometer to get a better angle estimate
+
 // #include <Arduino.h>
 
 // #include <Wire.h>
@@ -7,24 +7,44 @@
 // int RateCalibrationNumber;
 // float AccX, AccY, AccZ;
 // float AngleRoll, AnglePitch, AngleYaw;
-// uint32_t LoopTimer;
+// float RateBiasYaw;
+
 // unsigned long tiempo_prev = 0;
 
-// float KalmanAngleRoll = 0, KalmanUncertaintyAngleRoll = 2 * 2;
-// float KalmanAnglePitch = 0, KalmanUncertaintyAnglePitch = 2 * 2;
-// float KalmanAngleYaw = 0, KalmanUncertaintyAngleYaw = 2 * 2;
-// float Kalman1DOutput[] = {0, 0};
 
-// void kalman_1d(float KalmanState, float KalmanUncertainty, float KalmanInput, float KalmanMeasurement)
+// float KalmanAngleYaw = 0;
+// // float Q_angle = 0.001, Q_bias = 0.003, R_measure = 0.03;
+// float Q_angle = 0.1, Q_bias = 0.1, R_measure = 1;
+
+// float P[2][2] = {{0, 0}, {0, 0}};
+// float K[2];
+
+// void kalmanUpdate(float newAngle, float newRate, float dt)
 // {
-//     KalmanState = KalmanState + 0.004 * KalmanInput;
-//     KalmanUncertainty = KalmanUncertainty + 0.004 * 0.004 * 4 * 4;
-//     float KalmanGain = KalmanUncertainty * 1 / (1 * KalmanUncertainty + 3 * 3);
-//     KalmanState = KalmanState + KalmanGain * (KalmanMeasurement - KalmanState);
-//     KalmanUncertainty = (1 - KalmanGain) * KalmanUncertainty;
-//     Kalman1DOutput[0] = KalmanState;
-//     Kalman1DOutput[1] = KalmanUncertainty;
+//     // Prediction
+//     RateYaw = newRate - RateBiasYaw;
+//     KalmanAngleYaw += dt * RateYaw;
+
+
+//     P[0][0] += dt * (dt * P[1][1] - P[0][1] - P[1][0] + Q_angle);
+//     P[0][1] -= dt * P[1][1];
+//     P[1][0] -= dt * P[1][1];
+//     P[1][1] += Q_bias * dt;
+
+//     // Update
+//     K[0] = P[0][0] / (P[0][0] + R_measure);
+//     K[1] = P[1][0] / (P[0][0] + R_measure);
+
+//     float y = newAngle - KalmanAngleYaw;
+//     KalmanAngleYaw += K[0] * y;
+//     RateBiasYaw += K[1] * y;
+
+//     P[0][0] -= K[0] * P[0][0];
+//     P[0][1] -= K[0] * P[0][1];
+//     P[1][0] -= K[1] * P[0][0];
+//     P[1][1] -= K[1] * P[0][1];
 // }
+
 
 // void gyro_signals(void)
 // {
@@ -54,8 +74,8 @@
 //     int16_t GyroX = Wire.read() << 8 | Wire.read();
 //     int16_t GyroY = Wire.read() << 8 | Wire.read();
 //     int16_t GyroZ = Wire.read() << 8 | Wire.read();
-//     RatePitch = (float)GyroX / 65.5;
-//     RateRoll = (float)GyroY / 65.5;
+//     RateRoll = (float)GyroX / 65.5;
+//     RatePitch = (float)GyroY / 65.5;
 //     RateYaw = (float)GyroZ / 65.5;
 
 //     AccX = (float)AccXLSB / 4096 + 0.04;
@@ -70,6 +90,7 @@
 //     tiempo_prev = millis();
 
 //     // Calcular el ángulo de Yaw
+//     kalmanUpdate(AngleYaw, RateYaw, dt);
 //     AngleYaw = AngleYaw + RateYaw * dt;
 // }
 // void setup()
@@ -87,44 +108,18 @@
 //     for (RateCalibrationNumber = 0; RateCalibrationNumber < 1000; RateCalibrationNumber++)
 //     {
 //         gyro_signals();
-//         RateCalibrationRoll += RateRoll;
-//         RateCalibrationPitch += RatePitch;
 //         RateCalibrationYaw += RateYaw;
 //         delay(1);
 //     }
-//     RateCalibrationRoll /= 1000;
-//     RateCalibrationPitch /= 1000;
 //     RateCalibrationYaw /= 1000;
-//     LoopTimer = micros();
 //     Serial.println("Calibracion finalizada");
 // }
 
 // void loop()
 // {
 //     gyro_signals();
-//     RateRoll -= RateCalibrationRoll;
-//     RatePitch -= RateCalibrationPitch;
 //     RateYaw -= RateCalibrationYaw;
-//     kalman_1d(KalmanAngleRoll, KalmanUncertaintyAngleRoll, RateRoll, AngleRoll);
-//     KalmanAngleRoll = Kalman1DOutput[0];
-//     KalmanUncertaintyAngleRoll = Kalman1DOutput[1];
-
-//     kalman_1d(KalmanAnglePitch, KalmanUncertaintyAnglePitch, RatePitch, AnglePitch);
-//     KalmanAnglePitch = Kalman1DOutput[0];
-//     KalmanUncertaintyAnglePitch = Kalman1DOutput[1];
-
-//     Serial.print("Roll Angle [°]: ");
-//     Serial.print(KalmanAngleRoll);
-//     Serial.print(" Pitch Angle [°]: ");
-//     Serial.println(KalmanAnglePitch);
-//     // Aplicar el filtro de Kalman al ángulo de Yaw
-//     // kalman_1d(KalmanAngleYaw, KalmanUncertaintyAngleYaw, RateYaw, AngleYaw);
-//     // KalmanAngleYaw = Kalman1DOutput[0];
-//     // KalmanUncertaintyAngleYaw = Kalman1DOutput[1];
-
-//     // Serial.print("Yaw Angle [°]: ");
-//     // Serial.println(KalmanAngleYaw);
-//     while (micros() - LoopTimer < 4000)
-//         ;
-//     LoopTimer = micros();
+//     Serial.print("angle: ");
+//     Serial.println(KalmanAngleYaw);
+//     delay(50);
 // }
