@@ -57,9 +57,9 @@ float Giroscopio::gyro_signals()
     RatePitch = (float)GyroY / 65.5;
     RateYaw = (float)GyroZ / 65.5;
 
-    AccX = (float)AccXLSB / 4096 + 0.04;
-    AccY = (float)AccYLSB / 4096 - 0.29;
-    AccZ = (float)AccZLSB / 4096 + 0.30;
+    AccX = (float)AccXLSB / 4096 - 0.07;
+    AccY = (float)AccYLSB / 4096 + 0.01;
+    AccZ = (float)AccZLSB / 4096 + 0.02;
 
     AnglePitch = atan(AccY / sqrt(AccX * AccX + AccZ * AccZ)) * 1 / (3.142 / 180);
     AngleRoll = -atan(AccX / sqrt(AccY * AccY + AccZ * AccZ)) * 1 / (3.142 / 180);
@@ -125,10 +125,20 @@ float Giroscopio::getAngle(String eje)
         // dt para angulo yaw
         float dt = (millis() - tiempo_prev) / 1000.0;
         tiempo_prev = millis();
+        if (RateYaw < 5 && RateYaw > -5)
+        {
+            // Calcular el ángulo de Yaw
+            AngleYaw += 0 * dt;
+            return AngleYaw;
+        }
+        else
+        {
+            // Calcular el ángulo de Yaw
+            AngleYaw += RateYaw * dt;
+            return AngleYaw;
+        }
         // Calcular el ángulo de Yaw
-        kalmanUpdate(AngleYaw, RateYaw, dt);
-        AngleYaw = AngleYaw + RateYaw * dt;
-        return KalmanAngleYaw;
+        // AngleYaw += RateYaw * dt;
     }
     else
     {

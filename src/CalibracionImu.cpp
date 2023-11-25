@@ -1,4 +1,4 @@
-// //calibration to accelerometer
+// // calibration to accelerometer
 
 // #include <Arduino.h>
 
@@ -39,9 +39,10 @@
 //     RateRoll = (float)GyroY / 65.5;
 //     RatePitch = (float)GyroX / 65.5;
 //     RateYaw = (float)GyroZ / 65.5;
-//     AccX = (float)AccXLSB / 4096 + 0.04;
-//     AccY = (float)AccYLSB / 4096 - 0.29;
-//     AccZ = (float)AccZLSB / 4096 + 0.30;
+
+//     AccX = (float)AccXLSB / 4096 - 0.07;
+//     AccY = (float)AccYLSB / 4096 + 0.01;
+//     AccZ = (float)AccZLSB / 4096 + 0.02;
 
 //     AnglePitch = atan(AccY / sqrt(AccX * AccX + AccZ * AccZ)) * 1 / (3.142 / 180);
 //     AngleRoll = -atan(AccX / sqrt(AccY * AccY + AccZ * AccZ)) * 1 / (3.142 / 180);
@@ -49,9 +50,18 @@
 //     // dt para angulo yaw
 //     float dt = (millis() - tiempo_prev) / 1000.0;
 //     tiempo_prev = millis();
-
+//     if (RateYaw < 3 && RateYaw > -3)
+//     {
+//         // Calcular el ángulo de Yaw
+//         AngleYaw += 0 * dt;
+//     }
+//     else
+//     {
+//         // Calcular el ángulo de Yaw
+//         AngleYaw += RateYaw * dt;
+//     }
 //     // Calcular el ángulo de Yaw
-//     AngleYaw += RatePitch * dt;
+//     // AngleYaw += RateYaw * dt;
 // }
 // void setup()
 // {
@@ -71,7 +81,7 @@
 // {
 //     gyro_signals();
 
-//     // // CALIBRACION
+//     // CALIBRACION
 //     // Serial.print("Acceleration X [g]= ");
 //     // Serial.print(AccX);
 //     // Serial.print(" Acceleration Y [g]= ");
@@ -80,13 +90,15 @@
 //     // Serial.println(AccZ);
 //     // delay(50);
 
-//     //View the angle with accelerometer
-//     Serial.print(" Roll Angel: ");
-//     Serial.print(AngleRoll);
+//     // View the angle with accelerometer
+//     // Serial.print(" Roll Angel: ");
+//     // Serial.print(AngleRoll);
 
-//     Serial.print(" Pitch Angle: ");
-//     Serial.print(AnglePitch);
+//     // Serial.print(" Pitch Angle: ");
+//     // Serial.print(AnglePitch);
 //     Serial.print(" Yaw:  ");
-//     Serial.println(AngleYaw);
+//     Serial.print(AngleYaw);
+//     Serial.print(" Rate:  ");
+//     Serial.println(RateYaw);
 //     delay(50);
 // }
