@@ -4,6 +4,8 @@ const int encoderPin = 3;
 volatile long pulseCount = 0;
 unsigned long lastTime = 0;
 
+
+
 // Definir pines y variables para el segundo encoder
 const int encoderPin2 = 2;
 volatile long pulseCount2 = 0;
