@@ -2,16 +2,16 @@
 
 // #include <PID_v1.h>
 
-// const int encoderPin = 3;
+// const int encoderPin = 2;
 // volatile long pulseCount = 0;
 // volatile long frecuenciaEncoder = 0;
 
 // unsigned long interval = 100;
 // unsigned long previuosMillis = 0;
 
-// int pwm_salida = 11;
-// int in1 = 8;
-// int in2 = 9;
+// int pwm_salida = 10;
+// int in1 = 7;
+// int in2 = 6;
 
 // double Kp = 6.2283;
 // double Ki = 82.5020;
@@ -58,6 +58,7 @@
 // {
 //     previuosMillis = currentMillis;
 //     frecuenciaEncoder = pulseCount;
+
 //     // Predicción del estado
 //     float predictedEstimate = estimate;
 //     float predictedErrorEstimate = errorEstimate + processNoise;
