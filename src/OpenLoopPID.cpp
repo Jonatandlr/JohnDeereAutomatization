@@ -79,45 +79,45 @@ void loop()
     pulseCount = 0;
   }
 
-  sp = 600; // set point desired
-  error = sp - pv;
+//   sp = 600; // set point desired
+//   error = sp - pv;
 
-  // // ecuacion de diferencias
-  // cv = cv1 + (Kp + Kd / Tm) * error + (-Kp + Ki * Tm - 2 * Kd / Tm) * error1 + (Kd / Tm) + error2;
-  // cv1 = cv;
-  // error2 = error1;
+//   // // ecuacion de diferencias
+//   // cv = cv1 + (Kp + Kd / Tm) * error + (-Kp + Ki * Tm - 2 * Kd / Tm) * error1 + (Kd / Tm) + error2;
+//   // cv1 = cv;
+//   // error2 = error1;
 
-  cv = cv1 + (Kp + Ki * Tm) * error + Ki * error1;
-  cv1 = cv;
-  error1 = error;
+//   cv = cv1 + (Kp + Ki * Tm) * error + Ki * error1;
+//   cv1 = cv;
+//   error1 = error;
 
 
-  // p = Kp * error;
-  // i = i + Ki * error * Tm;
-  // cv = p + i;
-  // error1 = error;
+//   // p = Kp * error;
+//   // i = i + Ki * error * Tm;
+//   // cv = p + i;
+//   // error1 = error;
 
-  Serial.print(">cv: ");
-  Serial.println(cv);
+//   Serial.print(">cv: ");
+//   Serial.println(cv);
 
-  // saturamos la salida del pid
-  if (cv > 1000)
-  {
-    cv = 1000;
-  }
-  if (cv < 470)
-  {
-    cv = 470;
-  }
+//   // saturamos la salida del pid
+//   if (cv > 1000)
+//   {
+//     cv = 1000;
+//   }
+//   if (cv < 470)
+//   {
+//     cv = 470;
+//   }
   
-  Serial.print(">cv saturado: ");
-  Serial.println(cv);
+//   Serial.print(">cv saturado: ");
+//   Serial.println(cv);
 
-  int vel = cv * (255.0 / 1000.0);
+//   int vel = cv * (255.0 / 1000.0);
 
-  analogWrite(pwm_salida, vel);
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
+//   analogWrite(pwm_salida, vel);
+//   digitalWrite(in1, HIGH);
+//   digitalWrite(in2, LOW);
 
   // Serial.print(">vel: ");
   // Serial.println(vel);
