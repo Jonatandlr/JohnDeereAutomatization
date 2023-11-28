@@ -18,6 +18,10 @@ public:
     }
     void setSpeedVuelta(int vel) { _velvuelta = vel; };
     void setSpeed180(int vel) { _vuelta180 = vel; };
+    void setVelocidad(int velL, int velR){
+        _velR = velR;
+        _velL = velL;
+    };
     void avanzar();
     void atras();
     void stop();
