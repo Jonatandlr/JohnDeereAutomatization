@@ -22,6 +22,7 @@ void Giroscopio::setup()
     RateCalibrationRoll /= 1000;
     RateCalibrationPitch /= 1000;
     RateCalibrationYaw /= 1000;
+    Serial.println(RateCalibrationYaw);
     Serial.println("Calibracion finalizada");
 }
 
@@ -61,17 +62,27 @@ float Giroscopio::gyro_signals()
     AccY = (float)AccYLSB / 4096 + 0.01;
     AccZ = (float)AccZLSB / 4096 + 0.02;
 
-    AnglePitch = atan(AccY / sqrt(AccX * AccX + AccZ * AccZ)) * 1 / (3.142 / 180);
-    AngleRoll = -atan(AccX / sqrt(AccY * AccY + AccZ * AccZ)) * 1 / (3.142 / 180);
+    // AnglePitch = atan(AccY / sqrt(AccX * AccX + AccZ * AccZ)) * 1 / (3.142 / 180);
+    // AngleRoll = -atan(AccX / sqrt(AccY * AccY + AccZ * AccZ)) * 1 / (3.142 / 180);
 
-    // dt para angulo yaw
-    float dt = (millis() - tiempo_prev) / 1000.0;
-    tiempo_prev = millis();
+    // // dt para angulo yaw
+    // float dt = (millis() - tiempo_prev) / 1000.0;
+    // tiempo_prev = millis();
 
-    // Calcular el ángulo de Yaw
-    kalmanUpdate(AngleYaw, RateYaw, dt);
-    AngleYaw = AngleYaw + RateYaw * dt;
-    return KalmanAngleYaw;
+    // // Calcular el ángulo de Yaw
+    // // Serial.println(RateCalibrationYaw);
+    // if (RateYaw < 3 && RateYaw > -3)
+    // {
+    //     AngleYaw = AngleYaw + 0 * dt;
+    //     kalmanUpdate(AngleYaw, 0, dt);
+    //     return KalmanAngleYaw;
+    // }
+    // else
+    // {
+    //     AngleYaw = AngleYaw + RateYaw * dt;
+    //     kalmanUpdate(AngleYaw, RateYaw, dt);
+    //     return KalmanAngleYaw;
+    // }
 }
 
 float Giroscopio::getAngle(String eje)
@@ -125,20 +136,22 @@ float Giroscopio::getAngle(String eje)
         // dt para angulo yaw
         float dt = (millis() - tiempo_prev) / 1000.0;
         tiempo_prev = millis();
-        if (RateYaw < 5 && RateYaw > -5)
+
+        RateYaw -= RateCalibrationYaw;
+        // Calcular el ángulo de Yaw
+        // Serial.println(RateCalibrationYaw);
+        if (RateYaw < 1 && RateYaw > -1)
         {
-            // Calcular el ángulo de Yaw
-            AngleYaw += 0 * dt;
-            return AngleYaw;
+            AngleYaw = AngleYaw + 0 * dt;
+            kalmanUpdate(AngleYaw, 0, dt);
+            return KalmanAngleYaw;
         }
         else
         {
-            // Calcular el ángulo de Yaw
-            AngleYaw += RateYaw * dt;
-            return AngleYaw;
+            AngleYaw = AngleYaw + RateYaw * dt;
+            kalmanUpdate(AngleYaw, RateYaw, dt);
+            return KalmanAngleYaw;
         }
-        // Calcular el ángulo de Yaw
-        // AngleYaw += RateYaw * dt;
     }
     else
     {
