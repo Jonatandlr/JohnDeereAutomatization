@@ -28,6 +28,7 @@ class Giroscopio
     public:
         Giroscopio(int predeterminado) { _predeterminado = predeterminado; };
         void setup();
+        void setupWithoutCalibration();
         float gyro_signals();
         float getAngle(String eje);
         float getRateYaw();

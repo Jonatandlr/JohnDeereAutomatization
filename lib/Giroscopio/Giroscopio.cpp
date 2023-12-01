@@ -4,6 +4,9 @@
 
 void Giroscopio::setup()
 {
+    // RateCalibrationYaw=0;
+    // AngleYaw=0;
+    // KalmanAngleYaw=0;
     Wire.setClock(400000);
     Wire.begin();
     delay(250);
@@ -22,8 +25,24 @@ void Giroscopio::setup()
     RateCalibrationRoll /= 1000;
     RateCalibrationPitch /= 1000;
     RateCalibrationYaw /= 1000;
-    Serial.println(RateCalibrationYaw);
+    // Serial.println(RateCalibrationYaw);
     Serial.println("Calibracion finalizada");
+}
+
+void Giroscopio::setupWithoutCalibration()
+{
+    // RateCalibrationYaw=0;
+    // RateYaw=0;
+    // AngleYaw=0;
+    // KalmanAngleYaw=0;
+    Wire.setClock(400000);
+    Wire.begin();
+    delay(250);
+    Wire.beginTransmission(0x68);
+    Wire.write(0x6B);
+    Wire.write(0x00);
+    Wire.endTransmission();
+    Serial.println("Calibracion finalizada sin calibrar");
 }
 
 float Giroscopio::gyro_signals()
@@ -139,8 +158,8 @@ float Giroscopio::getAngle(String eje)
 
         RateYaw -= RateCalibrationYaw;
         // Calcular el ángulo de Yaw
-        // Serial.println(RateCalibrationYaw);
-        if (RateYaw < 1 && RateYaw > -1)
+        // Serial.println(RateYaw);
+        if (RateYaw < 0.25 && RateYaw > -0.25)
         {
             AngleYaw = AngleYaw + 0 * dt;
             kalmanUpdate(AngleYaw, 0, dt);
@@ -158,6 +177,10 @@ float Giroscopio::getAngle(String eje)
         return 0;
     }
 }
+
+
+
+
 
 float Giroscopio::getRateYaw()
 {

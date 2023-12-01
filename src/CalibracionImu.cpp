@@ -82,23 +82,23 @@
 //     gyro_signals();
 
 //     // CALIBRACION
-//     // Serial.print("Acceleration X [g]= ");
-//     // Serial.print(AccX);
-//     // Serial.print(" Acceleration Y [g]= ");
-//     // Serial.print(AccY);
-//     // Serial.print(" Acceleration Z [g]= ");
-//     // Serial.println(AccZ);
-//     // delay(50);
-
-//     // View the angle with accelerometer
-//     // Serial.print(" Roll Angel: ");
-//     // Serial.print(AngleRoll);
-
-//     // Serial.print(" Pitch Angle: ");
-//     // Serial.print(AnglePitch);
-//     Serial.print(" Yaw:  ");
-//     Serial.print(AngleYaw);
-//     Serial.print(" Rate:  ");
-//     Serial.println(RateYaw);
+//     Serial.print("Acceleration X [g]= ");
+//     Serial.print(AccX);
+//     Serial.print(" Acceleration Y [g]= ");
+//     Serial.print(AccY);
+//     Serial.print(" Acceleration Z [g]= ");
+//     Serial.println(AccZ);
 //     delay(50);
+
+//     // // View the angle with accelerometer
+//     // // Serial.print(" Roll Angel: ");
+//     // // Serial.print(AngleRoll);
+
+//     // // Serial.print(" Pitch Angle: ");
+//     // // Serial.print(AnglePitch);
+//     // Serial.print(" Yaw:  ");
+//     // Serial.print(AngleYaw);
+//     // Serial.print(" Rate:  ");
+//     // Serial.println(RateYaw);
+//     // delay(50);
 // }
